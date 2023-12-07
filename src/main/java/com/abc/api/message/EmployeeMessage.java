@@ -48,5 +48,6 @@ public class EmployeeMessage implements Serializable {
                 "\"employeeName\": \"" + employeeName + "\", " +
                 "\"action\": \"" + action + "\"" +
                 "}";
+
     }
 }
