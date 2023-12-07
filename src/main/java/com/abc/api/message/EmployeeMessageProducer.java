@@ -1,10 +1,12 @@
 package com.abc.api.message;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EmployeeMessageProducer {
+public class EmployeeMessageProducer<T>{
 
     private final JmsTemplate jmsTemplate;
 
@@ -12,7 +14,8 @@ public class EmployeeMessageProducer {
         this.jmsTemplate = jmsTemplate;
     }
 
-    public void sendMessage(EmployeeMessage message) {
-        jmsTemplate.convertAndSend("employee.queue", message.toString());
+    public void sendMessage(String topic,T message) {
+        jmsTemplate.convertAndSend(topic, message);
+
     }
 }

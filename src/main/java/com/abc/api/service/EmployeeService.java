@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.abc.api.entity.Employee;
-import com.abc.api.message.EmployeeMessage;
 import com.abc.api.message.EmployeeMessageProducer;
 import com.abc.api.repository.EmployeeRepository;
 
@@ -33,12 +32,7 @@ public class EmployeeService {
 
         Employee createdEmployee = employeeRepository.save(employee);
 
-        // Send message to ActiveMQ on employee creation
-        EmployeeMessage message = new EmployeeMessage();
-        message.setEmployeeId(createdEmployee.getId());
-        message.setEmployeeName(createdEmployee.getName());
-        message.setAction("CREATED");
-        messageProducer.sendMessage(message);
+        messageProducer.sendMessage("employee.queue.create",createdEmployee);
 
         return createdEmployee;
     }
@@ -50,11 +44,7 @@ public class EmployeeService {
         // Implement update logic
         Employee savedEmployee = employeeRepository.save(updatedEmployee);
 
-        // Send message to ActiveMQ on employee update
-        EmployeeMessage message = new EmployeeMessage();
-        message.setEmployeeId(savedEmployee.getId());
-        message.setAction("UPDATED");
-        messageProducer.sendMessage(message);
+        messageProducer.sendMessage("employee.queue.update",savedEmployee);
 
         return savedEmployee;
     }
@@ -64,11 +54,6 @@ public class EmployeeService {
 
         employeeRepository.deleteById(id);
 
-        // Send message to ActiveMQ on employee deletion
-        EmployeeMessage message = new EmployeeMessage();
-        message.setEmployeeId(id);
-        message.setAction("DELETED");
-        messageProducer.sendMessage(message);
     }
 
     private void validateEmployee(Employee employee) {
